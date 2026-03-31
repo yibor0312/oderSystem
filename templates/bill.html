@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>結帳帳單 - 點餐系統</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f4f7f6; padding: 40px; }
+        .receipt-page { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 8px solid #e67e22; }
+        .receipt-header { text-align: center; border-bottom: 2px dashed #eee; padding-bottom: 20px; margin-bottom: 20px; }
+        .item-row { display: flex; justify-content: space-between; margin: 10px 0; color: #333; }
+        .total-box { border-top: 2px solid #333; margin-top: 20px; padding-top: 15px; font-size: 1.5em; font-weight: bold; display: flex; justify-content: space-between; }
+        .btn-confirm { background: #27ae60; color: white; border: none; width: 100%; padding: 15px; font-size: 1.2em; border-radius: 8px; cursor: pointer; margin-top: 25px; }
+        .btn-back { display: block; text-align: center; margin-top: 15px; color: #7f8c8d; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="receipt-page">
+    <div class="receipt-header">
+        <h1>🧾 我的消費收據</h1>
+        <p>客戶：{{ request.session.user_name }}</p>
+    </div>
+
+    {% for order in unpaid_orders %}
+    <div style="margin-bottom: 20px;">
+        <small style="color: #95a5a6;">訂單 #{{ order.oID }} ({{ order.oStatus }})</small>
+        {% for item in order.items.all %}
+        <div class="item-row">
+            <span>{{ item.food.fName }} x {{ item.quantity }}</span>
+            <span>${{ item.food.fPrice }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <div class="total-box">
+        <span>應付總額</span>
+        <span style="color: #e74c3c;">${{ current_bill }}</span>
+    </div>
+
+    <form action="{% url 'checkout_all_orders' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn-confirm" onclick="return confirm('確定結帳嗎？')">
+            確認支付並結帳
+        </button>
+    </form>
+
+    <a href="{% url 'menu' %}" class="btn-back">⬅ 返回菜單繼續點餐</a>
+</div>
+
+</body>
+</html>

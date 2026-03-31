@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>修改個人資料 - 點餐系統</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .form-label { font-weight: bold; color: #495057; }
+        .btn-update { border-radius: 20px; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                
+                <div class="card p-4 shadow-sm border-0">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4 text-primary">
+                            <i class="fas fa-user-edit me-2"></i>修改個人資料
+                        </h2>
+                        
+                        <form method="POST">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label class="form-label">姓名</label>
+                                <input type="text" name="cName" class="form-control" value="{{ customer.cName }}" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">生日</label>
+                                <input type="date" name="cBirthday" class="form-control" value="{{ customer.cBirthday|date:'Y-m-d' }}">
+                                <small class="text-muted">格式: YYYY-MM-DD</small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">電子郵件</label>
+                                <input type="email" name="cEmail" class="form-control" value="{{ customer.cEmail }}" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">電話</label>
+                                <input type="text" name="cPhone" class="form-control" value="{{ customer.cPhone }}" required>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-5">
+                                <button type="submit" class="btn btn-primary btn-update shadow-sm">
+                                    <i class="fas fa-save me-2"></i>儲存修改
+                                </button>
+                                <a href="{% url 'member_center' %}" class="btn btn-outline-secondary btn-update">
+                                    返回會員中心
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <p class="text-center mt-4 text-muted small">&copy; 2026 餐飲點餐系統</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

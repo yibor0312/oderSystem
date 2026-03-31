@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>會員註冊</title>
+    <style>
+        .error-msg { color: white; background-color: #ff4d4d; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+        .form-item { margin-bottom: 15px; }
+        label { display: inline-block; width: 100px; }
+    </style>
+</head>
+<body>
+    <h2>會員註冊</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="error-msg">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-item">
+            <label>帳號：</label>
+            <input type="text" name="account" value="{{ old_data.account }}" required>
+        </div>
+        <div class="form-item">
+            <label>密碼：</label>
+            <input type="password" name="password" required>
+        </div>
+        <div class="form-item">
+            <label>確認密碼：</label>
+            <input type="password" name="confirm_password" required>
+        </div>
+        <div class="form-item">
+            <label>姓名：</label>
+            <input type="text" name="name" value="{{ old_data.name }}" required>
+        </div>
+        <div class="form-item">
+            <label>性別：</label>
+            <select name="gender" required>
+                <option value="M" {% if old_data.gender == 'M' %}selected{% endif %}>男 (M)</option>
+                <option value="F" {% if old_data.gender == 'F' or not old_data.gender %}selected{% endif %}>女 (F)</option>
+            </select>
+        </div>
+        <div class="form-item">
+            <label>生日：</label>
+            <input type="date" name="birthday" value="{{ old_data.birthday }} required">
+        </div>
+        <div class="form-item">
+            <label>電子信箱：</label>
+            <input type="email" name="email" value="{{ old_data.email }} "required>
+        </div>
+        <div class="form-item">
+            <label>電話：</label>
+            <input type="text" name="phone" value="{{ old_data.phone }}" placeholder="例如：0912345678" required>
+        </div>
+
+        <button type="submit">確認註冊</button>
+    </form>
+    <hr>
+    <a href="{% url 'login' %}">已有帳號？回登入頁面</a>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>會員登入</title>
+    <style>
+        /* 讓整個頁面內容置中 */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 水平置中 */
+            justify-content: center; /* 垂直置中 (若需要全螢幕置中可加 min-height: 100vh) */
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 50px;
+        }
+
+        form {
+            display: inline-block;
+            text-align: left; /* 表單內部文字靠左，比較美觀 */
+        }
+
+        .button-group {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* 按鈕之間的間距 */
+            margin-top: 10px;
+        }
+
+        /* 忘記密碼的超連結樣式 */
+        .forgot-password {
+            font-size: 0.9em;
+            color: #666;
+            text-decoration: none;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>請先登入以開始點餐</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %};">
+                {{ message }}
+            </p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label>帳號：</label>
+        <input type="text" name="account" required><br><br>
+        
+        <label>密碼：</label>
+        <input type="password" name="password" required><br><br>
+        
+        <div class="button-group">
+            <button type="submit">登入</button>
+            <a href="{% url 'password_forget' %}" class="forgot-password">忘記密碼？</a>
+        </div>
+    </form>
+
+    <hr style="width: 300px; margin: 20px 0;">
+
+    <p>還沒有帳號嗎？</p>
+    <a href="{% url 'register' %}">
+        <button type="button" style="background-color: #4CAF50; color: white; border: none; padding: 5px 10px; cursor: pointer;">註冊新帳號</button>
+    </a>
+
+</body>
+</html>

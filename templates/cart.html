@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>購物車確認</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; padding: 30px; background-color: #f4f4f4; }
+        .cart-container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h2 { color: #333; border-left: 5px solid #007bff; padding-left: 15px; margin-bottom: 25px; }
+        
+        /* 表格樣式優化 */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background-color: #f8f9fa; color: #555; font-weight: bold; border-bottom: 2px solid #dee2e6; }
+        th, td { padding: 15px; text-align: center; }
+        td { border-bottom: 1px solid #eee; vertical-align: middle; }
+
+        /* 數量輸入框與按鈕 */
+        .qty-input { width: 50px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; text-align: center; }
+        .btn-update { background-color: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        .btn-update:hover { background-color: #0056b3; }
+        
+        /* 刪除按鈕 */
+        .btn-delete { color: #dc3545; background: none; border: 1px solid #dc3545; padding: 5px 10px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.9em; transition: 0.3s; }
+        .btn-delete:hover { background-color: #dc3545; color: white; }
+
+        .total-section { text-align: right; margin-top: 20px; padding-top: 20px; border-top: 2px solid #f4f4f4; }
+        .total-text { font-size: 1.4em; color: #e74c3c; font-weight: bold; }
+        
+        .action-bar { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-checkout { background-color: #28a745; color: white; border: none; padding: 15px 35px; border-radius: 8px; cursor: pointer; font-size: 1.2em; font-weight: bold; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); }
+        .btn-checkout:hover { background-color: #218838; }
+        .btn-back { color: #666; text-decoration: none; font-weight: bold; }
+        .btn-back:hover { color: #333; text-decoration: underline; }
+
+        /* 訊息提示 (Django messages) */
+        .messages { list-style: none; padding: 0; }
+        .alert { padding: 10px; margin-bottom: 20px; border-radius: 4px; color: white; }
+        .alert-success { background-color: #28a745; }
+        .alert-error { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+
+<div class="cart-container">
+    <h2>您的訂單內容</h2>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if items %}
+    <table>
+        <thead>
+            <tr>
+                <th>餐點名稱</th>
+                <th>單價</th>
+                <th style="width: 200px;">數量</th>
+                <th>小計</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td style="text-align: left; font-weight: bold;">{{ item.food.fName }}</td>
+                <td>${{ item.food.fPrice }}</td>
+                <td>
+                    <form action="{% url 'update_cart' %}" method="POST" style="display: inline-flex; gap: 5px;">
+                        {% csrf_token %}
+                        <input type="hidden" name="food_id" value="{{ item.food.fID }}">
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.food.fStock }}" class="qty-input">
+                        <button type="submit" class="btn-update">更新</button>
+                    </form>
+                </td>
+                <td style="color: #444; font-weight: bold;">${{ item.subtotal }}</td>
+                <td>
+                    <form action="{% url 'update_cart' %}" method="POST" onsubmit="return confirm('確定要移除此商品嗎？');">
+                        {% csrf_token %}
+                        <input type="hidden" name="food_id" value="{{ item.food.fID }}">
+                        <input type="hidden" name="quantity" value="0"> <button type="submit" class="btn-delete">移除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total-section">
+        <span style="color: #888; margin-right: 10px;">結帳金額合計</span>
+        <div class="total-text">${{ total_price }}</div>
+    </div>
+
+    <div class="action-bar">
+        <a href="{% url 'menu' %}" class="btn-back">← 繼續點餐</a>
+        
+        <form action="{% url 'create_order' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn-checkout">確認下單送往廚房</button>
+        </form>
+    </div>
+
+    {% else %}
+    <div style="text-align: center; padding: 50px 0;">
+        <p style="font-size: 1.2em; color: #999;">您的購物車目前沒有餐點喔！</p>
+        <br>
+        <a href="{% url 'menu' %}" style="background: #007bff; color: white; padding: 10px 25px; border-radius: 5px; text-decoration: none;">馬上去選購</a>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

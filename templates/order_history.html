@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>歷史訂單 - 點餐系統</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-primary"><i class="fas fa-list-alt me-2"></i>我的訂單紀錄</h2>
+            <a href="{% url 'member_center' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-reply me-1"></i>返回會員中心
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="ps-4">訂單編號</th>
+                                <th>下單時間</th>
+                                <th>總金額</th>
+                                <th class="text-center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td class="ps-4 fw-bold">#{{ order.oID }}</td>
+                                <td>{{ order.oTime|date:"Y-m-d H:i" }}</td>
+                                <td class="text-danger fw-bold">${{ order.oTotal }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'order_detail' order.oID %}" class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-search me-1"></i>查看明細
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <i class="fas fa-box-open fa-3x text-muted mb-3 d-block"></i>
+                                    <p class="text-muted">您目前還沒有任何訂單喔！</p>
+                                    <a href="{% url 'menu' %}" class="btn btn-primary btn-sm">現在去點餐</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        點餐管理系統
+    </a>
+    {% if today_sales is not None %}
+        <span style="font-size: 14px; margin-left: 20px; background: #28a745; color: white; padding: 4px 10px; border-radius: 20px;">
+            💰 今日：${{ today_sales }}
+        </span>
+        <span style="font-size: 14px; margin-left: 10px; background: #17a2b8; color: white; padding: 4px 10px; border-radius: 20px;">
+            📅 本月：${{ month_sales }}
+        </span>
+    {% endif %}
+</h1>
+{% endblock %}
+
+{% block nav-global %}
+    <a href="/kitchen/" target="_blank" style="color: #ffc107; font-weight: bold; text-decoration: none;">👨‍🍳 開啟廚房看板</a>
+{% endblock %}
