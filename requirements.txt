@@ -1,0 +1,9 @@
+asgiref==3.8.1
+backports.zoneinfo==0.2.1
+Django==4.2.27
+mysqlclient==2.2.4
+pillow==10.4.0
+PyMySQL==1.1.2
+sqlparse==0.5.5
+typing_extensions==4.13.2
+tzdata==2025.3
